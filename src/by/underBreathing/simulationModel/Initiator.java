@@ -3,6 +3,7 @@ package by.underBreathing.simulationModel;
 import by.underBreathing.simulationModel.bidBroker.BidBroker;
 import by.underBreathing.simulationModel.consumer.Consumer;
 import by.underBreathing.simulationModel.deviceManager.DeviceManager;
+import by.underBreathing.simulationModel.deviceManager.DeviceRing;
 import by.underBreathing.simulationModel.statistic.ModelTimer;
 import by.underBreathing.simulationModel.producer.Producer;
 import by.underBreathing.simulationModel.statistic.Statistic;
@@ -17,20 +18,21 @@ public class Initiator {
         long timeOfExperimentMillis = scanner.nextLong() * 1000;
         ModelTimer.initializeStartTime();
         final BidBroker bidBroker = new BidBroker(2);
-        DeviceManager.DeviceRing.addDevice(new Consumer("1",1500));
-        //DeviceManager.DeviceRing.addDevice(new Consumer(3000));
+        final DeviceRing deviceRing = new DeviceRing();
+        final DeviceManager deviceManager = new DeviceManager(bidBroker,deviceRing);
+        deviceManager.addConsumer(new Consumer(1,1500,deviceRing));
 
         final Thread firstProducer = new Thread(new Producer(2000,bidBroker));
         final Thread secondProducer = new Thread(new Producer(3000,bidBroker));
-        final Thread deviceManager = new Thread(new DeviceManager(bidBroker));
-        startThreads(firstProducer,secondProducer,deviceManager);
+        final Thread deviceManagerThread = new Thread(deviceManager);
+        startThreads(firstProducer,secondProducer,deviceManagerThread);
 
         Thread.sleep(timeOfExperimentMillis);
 
         interruptThreads(firstProducer,secondProducer);
 
         Thread.sleep(8000);//чтобы приборы доработали
-        deviceManager.interrupt();
+        deviceManagerThread.interrupt();
         System.out.println("Подождали, теперь выводим статистику генерации заявок - > ");
         Statistic.outputInformation();
     }

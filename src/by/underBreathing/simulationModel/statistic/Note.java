@@ -4,28 +4,30 @@ public class Note {
     SpecialEvents typeOfSpecialEvent;
     long time;
     String bid;
-    String fromDevice;
-    public Note(final SpecialEvents typeOfSpecialEvent,final long time, String bid,String fromDevice){
+    int numberOfDevice;
+    long timeOfProcessing;
+    public Note(final SpecialEvents typeOfSpecialEvent,final long time, String bid,int numberOfDevice,long timeOfProcessing){
         this.typeOfSpecialEvent = typeOfSpecialEvent;
         this.time = time;
         this.bid = bid;
-        this.fromDevice = fromDevice;
+        this.numberOfDevice = numberOfDevice;
+        this.timeOfProcessing = timeOfProcessing;
     }
 
     public Note(final SpecialEvents typeOfSpecialEvent,final long time, String bid){
         this.typeOfSpecialEvent = typeOfSpecialEvent;
         this.time = time;
         this.bid = bid;
-        this.fromDevice = "";
+        this.numberOfDevice = 0;
     }
 
     @Override
     public String toString() {
-        if(fromDevice.isEmpty()){
-            return typeOfSpecialEvent + " " + bid + " " + time;
+        if(numberOfDevice == 0 ){
+            return typeOfSpecialEvent + " " + bid + " " + time ;
         }
         else{
-            return typeOfSpecialEvent + " " + bid + " " + time + " device " + fromDevice;
+            return typeOfSpecialEvent + " " + bid + " " + time + " device " + numberOfDevice + " time of processing = " + timeOfProcessing;
         }
     }
 }
